@@ -11,4 +11,5 @@ output "public_dns" {
 output "private_key" {
   value       = tls_private_key.react_calculator_public_key.private_key_pem
   description = "the public key that will be used for ssh"
+  sensitive   = true
 }
