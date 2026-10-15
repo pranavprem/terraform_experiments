@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: terraform
+    directory: /simple_server
+    schedule:
+      interval: monthly
+  - package-ecosystem: terraform
+    directory: /multiserver_loadbalancer
+    schedule:
+      interval: monthly
+  - package-ecosystem: terraform
+    directory: /remote_state/remote_state_store
+    schedule:
+      interval: monthly
+  - package-ecosystem: terraform
+    directory: /remote_state/launch_config
+    schedule:
+      interval: monthly
+  - package-ecosystem: terraform
+    directory: /remote_state/autoscaling_loadbalancing
+    schedule:
+      interval: monthly

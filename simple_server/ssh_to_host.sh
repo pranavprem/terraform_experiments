@@ -1,4 +1,11 @@
-rm -rf ~/react_calculator_key_pair.pem
-terraform output private_key | sed '$d' | sed '$d' | sed '1d' > ~/react_calculator_key_pair.pem
-chmod 400 ~/react_calculator_key_pair.pem
-ssh -i "~/react_calculator_key_pair.pem" bitnami@$(terraform output public_dns | sed 's/"//g')
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+
+key_file="${HOME}/react_calculator_key_pair.pem"
+umask 077
+terraform output -raw private_key > "${key_file}"
+chmod 400 "${key_file}"
+
+dns="$(terraform output -raw public_dns)"
+exec ssh -i "${key_file}" -o StrictHostKeyChecking=accept-new "ubuntu@${dns}"

@@ -1,14 +1,14 @@
 output "alb_dns_name" {
   value       = aws_lb.react_calculator_lb.dns_name
-  description = "The domain name of the load balancer"
+  description = "Domain name of the load balancer."
 }
 
-// output "public_ips" {
-//   value = data.aws_instances.workers.public_ips
-// }
+output "app_url" {
+  value       = "http://${aws_lb.react_calculator_lb.dns_name}/"
+  description = "Calculator URL via the load balancer."
+}
 
-// data "aws_instances" "workers" {
-//   instance_tags = {
-//     Name = "react_calculator_asg"
-//   }
-// }
+output "public_ips" {
+  value       = data.aws_instances.workers.public_ips
+  description = "Public IPs of instances tagged react_calculator_asg. Empty until the group finishes launching."
+}

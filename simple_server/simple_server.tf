@@ -1,25 +1,35 @@
+# The 2020 config pinned ami-05ec0d2eeb9187f51, which no longer resolves.
+# user-data uses apt, so look up the current Ubuntu 24.04 LTS image.
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+}
+
 resource "aws_instance" "react_calculator_ec2" {
-  instance_type = "t2.micro"
-  ami           = "ami-05ec0d2eeb9187f51"
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  key_name                    = aws_key_pair.react_calculator_key_pair.key_name
+  vpc_security_group_ids      = [aws_security_group.react_calculator_sg.id]
+  user_data                   = file("${path.module}/../scripts/user-data.sh")
+  user_data_replace_on_change = true
+
   tags = {
     Name = var.ec2_name
   }
-  key_name               = aws_key_pair.react_calculator_key_pair.id
-  vpc_security_group_ids = [aws_security_group.react_calculator_sg.id]
-  user_data              = <<-EOF
-              #!/bin/bash
-              apt-get update && apt-get upgrade -y && apt-get autoremove && apt-get autoclean 2>&1 | tee output-apt-install.txt
-              apt-get -y install git 2>&1 | tee output-git-install.txt 
-              apt-get -y install nodejs 2>&1 | tee output-node-install.txt
-              apt-get -y install npm 2>&1 | tee output-npm-install.txt
-              cd /root
-              echo "I came here" > here.txt
-              echo $(whoami) > here1.txt
-              git clone https://github.com/pranavprem/ReactCalculator.git 2>&1 | tee output-git.txt
-              echo "this also happened" >> here2.text
-              cd ReactCalculator
-              npm install 2>&1 | tee output-npm.log
-              npm run dev 2>&1 | tee run-dev-output.log
-              EOF
-
 }
