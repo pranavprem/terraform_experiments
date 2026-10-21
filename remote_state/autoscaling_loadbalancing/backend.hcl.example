@@ -1,0 +1,7 @@
+# Copy to backend.hcl (gitignored). Bucket and table come from remote_state_store.
+# Keep region aligned with var.aws_region (default us-east-1).
+bucket         = "react-calculator-remote-state"
+key            = "global/s3/terraform-autoscaling-loadbalancing.tfstate"
+region         = "us-east-1"
+dynamodb_table = "react-calculator-locks"
+encrypt        = true

@@ -1,9 +1,9 @@
 resource "aws_lb" "react_calculator_lb" {
 
-  name               = var.alb_name
+  name = var.alb_name
 
   load_balancer_type = "application"
-  subnets            = data.aws_subnet_ids.default.ids
+  subnets            = data.aws_subnets.default.ids
   security_groups    = [aws_security_group.react_calculator_alb_sg.id]
 }
 
@@ -30,7 +30,7 @@ resource "aws_lb_listener" "http" {
   port              = 80
   protocol          = "HTTP"
 
-  # By default, return a simple 404 page
+  # Fallback when no listener rule matches. The rule below forwards every path.
   default_action {
     type = "fixed-response"
 

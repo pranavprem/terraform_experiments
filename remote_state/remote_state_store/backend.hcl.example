@@ -1,0 +1,8 @@
+# Copy to backend.hcl (gitignored) after the bucket and lock table exist.
+# Bucket names are global. These are the names from the January 2021 experiment;
+# pick new ones if apply says the bucket is already taken.
+bucket         = "react-calculator-remote-state"
+key            = "global/s3/terraform-backend.tfstate"
+region         = "us-east-1"
+dynamodb_table = "react-calculator-locks"
+encrypt        = true

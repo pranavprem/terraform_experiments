@@ -1,20 +1,13 @@
 provider "aws" {
-
-}
-
-terraform {
-    backend "s3" {
-        bucket = "react-calculator-remote-state"
-        key = "global/s3/terraform-autoscaling-loadbalancing.tfstate"
-        dynamodb_table = "react-calculator-locks"
-        encrypt = true
-    }
+  region = var.aws_region
 }
 
 data "terraform_remote_state" "launch_config" {
-    backend = "s3"
-    config = {
-        bucket = "react-calculator-remote-state"
-        key = "global/s3/terraform-launch-config.tfstate"
-    }
+  backend = "s3"
+
+  config = {
+    bucket = var.state_bucket
+    key    = var.launch_config_state_key
+    region = var.aws_region
+  }
 }
